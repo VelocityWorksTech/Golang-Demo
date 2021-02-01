@@ -1,4 +1,4 @@
-package main
+package restHandlers
 
 import (
 	"context"
@@ -8,22 +8,35 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/anil-appface/golang-demo/model"
+	"github.com/go-resty/resty/v2"
+	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
 )
 
-type server struct {
-	_e *echo.Echo
+const dataGovURL = "https://www.consumerfinance.gov/data.json"
+
+type Server struct {
+	_e      *echo.Echo
+	_client *resty.Client
+	_db     *gorm.DB
 }
 
-func newServer(e *echo.Echo) *server {
-	return &server{
-		_e: e,
+//NewServer creates new server
+func NewServer(e *echo.Echo, c *resty.Client, db *gorm.DB) *Server {
+	return &Server{
+		_e:      e,
+		_client: c,
+		_db:     db,
 	}
 }
 
-func (s *server) Start() {
+func (s *Server) Start() {
 
 	//setup routers.
+
+	//populate db if data doesnt exists in db.
+	s.PopulateDB()
 
 	//start the server with graceful shutdown
 	s.Run()
@@ -31,7 +44,7 @@ func (s *server) Start() {
 }
 
 // Run will run the HTTP Server
-func (s *server) Run() {
+func (s *Server) Run() {
 	// Set up a channel to listen to for interrupt signals
 	var runChan = make(chan os.Signal, 1)
 
@@ -60,4 +73,31 @@ func (s *server) Run() {
 	// If we get one of the pre-prescribed syscalls, gracefully terminate the server
 	// while alerting the user
 	log.Printf("Server is shutting down due to %+v\n", interrupt)
+}
+
+//PopulateDB downlaods data from specific URL and saves it inside db
+func (s *Server) PopulateDB() error {
+
+	s._e.Logger.Infof("making request url: %s", dataGovURL)
+	resp, err := s._client.R().Get(dataGovURL)
+	if err != nil {
+		return err
+	}
+
+	//read response
+	s._e.Logger.Info("parsing the response to catalog")
+	catalog := &model.Catalog{}
+	err = model.ParseCatalogResponse(resp.Body(), catalog)
+	if err != nil {
+		return err
+	}
+
+	//saving to database
+	s._e.Logger.Info("Storing to database")
+	err = s._db.Create(&catalog).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

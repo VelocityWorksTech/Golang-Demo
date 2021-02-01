@@ -9,3 +9,8 @@ Frameworks used:
 - Resty to retrieve data from Data.gov: https://github.com/go-resty/resty
 - Jsonparser to process the data: https://github.com/buger/jsonparser
 - GORM to populate the database: https://github.com/jinzhu/gorm
+
+
+https://labs.data.gov/dashboard/offices/qa
+
+https://www.consumerfinance.gov/data.json
