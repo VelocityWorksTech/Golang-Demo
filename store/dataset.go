@@ -9,12 +9,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-
 // Dataset stores each entry in dataset field of catalog.
 type Dataset struct {
 	gorm.Model
 	CatalogID     uint           `json:"-"`
-	MetadataType  string         `json:"@type,omitempty"`
+	MetadataType  string         `json:"type,omitempty"`
 	Title         string         `json:"title,omitempty"`
 	Description   string         `json:"description,omitempty"`
 	Modified      string         `json:"modified,omitempty"`

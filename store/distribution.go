@@ -6,7 +6,7 @@ import "github.com/jinzhu/gorm"
 type Distribution struct {
 	gorm.Model
 	DatasetID       uint   `json:"-"`
-	MetaDataType    string `json:"@type,omitempty"`
+	MetaDataType    string `json:"type,omitempty"`
 	DownloadURL     string `json:"downloadURL,omitempty"`
 	AccessURL       string `json:"accessURL,omitempty"`
 	MediaType       string `json:"mediaType,omitempty"`

@@ -1,16 +1,16 @@
-package restHandlers
+package utils
 
 import (
+	"html/template"
 	"io"
-	"text/template"
 
 	"github.com/labstack/echo"
 )
 
 type Template struct {
-	templates *template.Template
+	*template.Template
 }
 
 func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-	return t.templates.ExecuteTemplate(w, name, data)
+	return t.ExecuteTemplate(w, name, data)
 }

@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"text/template"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -50,10 +49,6 @@ func (me *Server) Start() {
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
 
-	//setup template
-	me._e.Renderer = &Template{
-		templates: template.Must(template.ParseGlob("./static/index.html")),
-	}
 	//start the server with graceful shutdown
 	me.Run()
 

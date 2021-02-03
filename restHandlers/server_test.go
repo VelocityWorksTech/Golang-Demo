@@ -19,7 +19,7 @@ func TestPopulateDB(t *testing.T) {
 		panic(err)
 	}
 	dataHandler := NewDataHandler(c, db)
-	catalog, err := dataHandler.saveAndGetData(e.AcquireContext())
+	catalog, err := dataHandler.saveAndGetData(e.AcquireContext(), "https://www.usda.gov/sites/default/files/documents/data.json")
 	if err != nil {
 		t.Fail()
 	}

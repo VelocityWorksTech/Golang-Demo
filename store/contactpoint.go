@@ -6,7 +6,7 @@ import "github.com/jinzhu/gorm"
 type ContactPoint struct {
 	gorm.Model
 	DatasetID    uint   `json:"-"`
-	MetaDataType string `json:"@type,omitempty"`
+	MetaDataType string `json:"type,omitempty"`
 	Fn           string `json:"fn,omitempty"`
 	HasEmail     string `json:"hasEmail,omitempty"`
 }

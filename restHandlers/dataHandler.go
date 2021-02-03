@@ -26,10 +26,9 @@ func NewDataHandler(client *resty.Client, db *gorm.DB) *dataHandler {
 // PageInfoHandler handles the rendering and retrieval of the information to be
 // shown.
 func (me *dataHandler) Get(c echo.Context) error {
-	c.Logger().Debug("Reading from DB")
 
 	var err error
-	var catalog *store.Catalog
+	catalog := &store.Catalog{}
 	url := c.QueryParam("url")
 	if url != "" {
 		catalog, err = me.saveAndGetData(c, url)
@@ -38,23 +37,33 @@ func (me *dataHandler) Get(c echo.Context) error {
 		}
 	}
 
-	c.Logger().Info("Rendering template")
-	return c.Render(http.StatusOK, "info", catalog)
+	items := struct {
+		Catalog []store.Catalog
+	}{
+		Catalog: []store.Catalog{*catalog},
+	}
+
+	c.Logger().Infof("catalog: %#v", items.Catalog[0].ConformsTo)
+	return c.Render(http.StatusOK, "index.html", items)
+
 }
 
 func (me *dataHandler) GetData(c echo.Context) error {
-	// c.Echo().Logger
-	// app.server.Logger.Info("Reading from DB")
-	// info, err := app.fetchAllPayloadRecords()
-	// if err != nil {
-	// 	return err
-	// }
 
-	// page := models.PageData{Payloads: info}
+	var err error
+	catalog := &store.Catalog{}
+	url := c.QueryParam("url")
+	if url != "" {
+		catalog, err = me.saveAndGetData(c, url)
+		if err != nil {
+			return err
+		}
+	} else {
+		//Get the first record
+		catalog.First(me._db)
+	}
 
-	// app.server.Logger.Info("Rendering template")
-	// return c.Render(http.StatusOK, "info", page)
-	return nil
+	return c.JSONPretty(http.StatusOK, catalog, "\t")
 }
 
 //performDBaction downlaods data from specific URL and saves it inside db if data is not older than a day
@@ -62,30 +71,24 @@ func (me *dataHandler) saveAndGetData(c echo.Context, url string) (*store.Catalo
 
 	//cleanup if the data for the given url is already exists
 	catalog := &store.Catalog{}
-	me._db.First(catalog, "URL = ?", url)
+	me._db.Where("url = ?", url).First(catalog)
 
 	//Delete items & save if the response is not saved
 	if time.Now().Sub(catalog.CreatedAt) >= 24*time.Hour {
-		datasets := []int64{}
-		me._db.Model(&store.Dataset{}).Where(&store.Dataset{}, "CatalogID = ?", catalog.ID).Pluck("ID", &datasets)
-		for _, d := range datasets {
-			me._db.Delete(&store.Publisher{}).Where("DatasetID=?", d)
-			me._db.Delete(&store.Distribution{}).Where("DatasetID=?", d)
-			me._db.Delete(&store.ContactPoint{}).Where("DatasetID=?", d)
-		}
-		me._db.Delete(&store.Dataset{}).Where("CatalogID=?", catalog.ID)
-		me._db.Delete(catalog)
+
+		//Delete the catalog
+		catalog.Delete(me._db)
 
 		//make request
-		c.Logger().Infof("making request url: %s", dataGovURL)
-		resp, err := me._client.R().Get(dataGovURL)
+		c.Logger().Infof("making request url: %s", url)
+		resp, err := me._client.R().Get(url)
 		if err != nil {
 			return nil, err
 		}
 		//read response
 		catalog = &store.Catalog{}
 		c.Logger().Info("parsing the response to catalog")
-		catalog.URL = dataGovURL
+		catalog.URL = url
 		err = catalog.Parse(resp.Body())
 		if err != nil {
 			return nil, err
@@ -99,12 +102,7 @@ func (me *dataHandler) saveAndGetData(c echo.Context, url string) (*store.Catalo
 	} else {
 
 		//fetch all datasets
-		me._db.Table("datasets").Where("catalog_id = ?", catalog.ID).Find(&catalog.Dataset)
-		for i := 0; i < len(catalog.Dataset); i++ {
-			me._db.Table("contact_points").Where("dataset_id = ?", catalog.Dataset[i].ID).Find(&catalog.Dataset[i].ContactPoint)
-			me._db.Table("publishers").Where("dataset_id = ?", catalog.Dataset[i].ID).Find(&catalog.Dataset[i].Publisher)
-			me._db.Table("distributions").Where("dataset_id = ?", catalog.Dataset[i].ID).Find(&catalog.Dataset[i].Distributions)
-		}
+		catalog.GetDatasets(me._db)
 	}
 
 	return catalog, nil
