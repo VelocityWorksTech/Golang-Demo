@@ -14,3 +14,5 @@ Frameworks used:
 https://labs.data.gov/dashboard/offices/qa
 
 https://www.consumerfinance.gov/data.json
+
+https://resources.data.gov/resources/dcat-us/
