@@ -23,13 +23,17 @@ func NewDataHandler(client *resty.Client, db *gorm.DB) *dataHandler {
 	}
 }
 
-// PageInfoHandler handles the rendering and retrieval of the information to be
-// shown.
+//
 func (me *dataHandler) Get(c echo.Context) error {
+	return c.Render(http.StatusOK, "index.html", nil)
+}
+
+// Info gets the catalog information & will present in the context
+func (me *dataHandler) Info(c echo.Context) error {
 
 	var err error
 	catalog := &store.Catalog{}
-	url := c.QueryParam("url")
+	url := c.FormValue("urldetails")
 	if url != "" {
 		catalog, err = me.saveAndGetData(c, url)
 		if err != nil {
@@ -37,14 +41,7 @@ func (me *dataHandler) Get(c echo.Context) error {
 		}
 	}
 
-	items := struct {
-		Catalog []store.Catalog
-	}{
-		Catalog: []store.Catalog{*catalog},
-	}
-
-	c.Logger().Infof("catalog: %#v", items.Catalog[0].ConformsTo)
-	return c.Render(http.StatusOK, "index.html", items)
+	return c.Render(http.StatusOK, "info.html", catalog)
 
 }
 

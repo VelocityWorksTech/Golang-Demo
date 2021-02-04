@@ -17,33 +17,15 @@
         </p>
       </div>
 
-      <div>
-        Enter URL: <input type="text" id="url" />
-        <button id="getDataBtn">Get Data</button>
-      </div> 
-
-      {{range .Catalog}}
-     {{.}}
-      <div>url - {{.URL}}</div>
-      <div>ConformsTo - {{.ConformsTo}}</div>
-      {{range .Dataset}} 
-        <div>metadata - {{.MetadataType}}</div>
-      {{end}}
-      {{end}}
-
-
+      <form action="/info" method="post">
+        <input
+        autofocus
+        class="urldetails-input"
+        placeholder="Enter URL to get details"
+        name="urldetails"
+      />
+      <input type="submit" value="Get Data">
+      </form> 
     </main>
-
-    <script>
-      $(document).ready(function () {
-        $("#getDataBtn").click(function () {
-          if ($("#url").val()) {
-            $.get(`/?url=${$("#url").val()}`);
-          } else {
-            alert("Please enter the url");
-          }
-        });
-      });
-    </script>
   </body>
 </html>

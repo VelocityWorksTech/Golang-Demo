@@ -2,11 +2,14 @@ package restHandlers
 
 import (
 	"context"
+	"html/template"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"github.com/anil-appface/golang-demo/store"
+	"github.com/anil-appface/golang-demo/utils"
 	"github.com/go-resty/resty/v2"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
@@ -23,7 +26,24 @@ type Server struct {
 }
 
 //NewServer creates new server
-func NewServer(e *echo.Echo, c *resty.Client, db *gorm.DB) *Server {
+func NewServer() *Server {
+
+	//create a new echo
+	e := echo.New()
+
+	//create a new resty
+	c := resty.New()
+
+	//initialise db
+	db, err := store.OpenDBconnection()
+	if err != nil {
+		panic(err)
+	}
+	//setup template
+	e.Renderer = &utils.Template{
+		Template: template.Must(template.ParseGlob("static/*.html")),
+	}
+
 	return &Server{
 		_e:      e,
 		_client: c,
@@ -89,5 +109,6 @@ func (me *Server) Run() {
 func (me *Server) setupRouters() {
 	dh := NewDataHandler(me._client, me._db)
 	me._e.GET("/", dh.Get)
+	me._e.POST("/info", dh.Info)
 	me._e.GET("/data", dh.GetData)
 }

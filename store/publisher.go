@@ -6,6 +6,6 @@ import "github.com/jinzhu/gorm"
 type Publisher struct {
 	gorm.Model
 	DatasetID    uint   `json:"-"`
-	MetaDataType string `json:"type,omitempty"`
+	MetaDataType string `json:"@type,omitempty"`
 	Name         string `json:"name,omitempty"`
 }
