@@ -66,4 +66,4 @@ Benchmarking for this application is not done.
 
 ### API structure
 
-<img src="https://github.com/anil-appface/Golang-Demo/blob/master/docs/explanation.jpg"></img>
+<img src="https://github.com/anil-appface/Golang-Demo/blob/master/docs/api-setup.jpg"></img>
