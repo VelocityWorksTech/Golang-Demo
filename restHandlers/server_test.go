@@ -19,7 +19,9 @@ func TestPopulateDB(t *testing.T) {
 		panic(err)
 	}
 	dataHandler := NewDataHandler(c, db)
-	catalog, err := dataHandler.saveAndGetData(e.AcquireContext(), "https://www.usda.gov/sites/default/files/documents/data.json")
+	//url := "https://www.consumerfinance.gov/data.json"
+	url := "https://www.defense.gov/data.json"
+	catalog, err := dataHandler.saveAndGetData(e.AcquireContext(), url)
 	if err != nil {
 		t.Fail()
 	}

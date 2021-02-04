@@ -50,7 +50,4 @@ Benchmarking for this application is not done.
 1. There is no authentication wrapper around the API's.
 2. There is no field validation in api.
 4. There is no much test cases written in the interest of time.
-
-https://www.consumerfinance.gov/data.json
-
-https://resources.data.gov/resources/dcat-us/
+5. There is no cron/automation to scrape the defined URL response to store in DB

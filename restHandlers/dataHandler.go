@@ -74,7 +74,9 @@ func (me *dataHandler) saveAndGetData(c echo.Context, url string) (*store.Catalo
 	if time.Now().Sub(catalog.CreatedAt) >= 24*time.Hour {
 
 		//Delete the catalog
-		catalog.Delete(me._db)
+		if catalog.URL != "" {
+			catalog.Delete(me._db)
+		}
 
 		//make request
 		c.Logger().Infof("making request url: %s", url)
