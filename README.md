@@ -43,7 +43,12 @@ This project uses the below frameworks:
 
 Benchmarking for this application is not done.
 
-<p align="justify"><i>"As this application uses Echo web framework, the default logs of echo server shows the Method type, uri, and Status code(Which is configurable in main.go). Also it shows the logging of method name, line number and file."</i></p>
+<p align="justify"><i>"As this application uses Echo web framework, the default logs of echo server shows the Method type, uri, and Status code(Which is configurable in main.go). Also it shows the logging of method name, line number and file." <br/>
+
+
+{"time":"2021-02-04T11:48:34.559638168+05:30","id":"","remote_ip":"::1","host":"localhost:8000","method":"GET","uri":"/data?url=https://www.defense.gov/data.json","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36","status":200,"error":"","latency":3516046682,"latency_human":"3.516046682s","bytes_in":0,"bytes_out":294234}
+
+</i></p>
 
 
 ## Limitations

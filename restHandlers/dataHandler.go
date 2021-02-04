@@ -23,7 +23,7 @@ func NewDataHandler(client *resty.Client, db *gorm.DB) *dataHandler {
 	}
 }
 
-//
+//Get request gets the index page
 func (me *dataHandler) Get(c echo.Context) error {
 	return c.Render(http.StatusOK, "index.html", nil)
 }
@@ -45,6 +45,7 @@ func (me *dataHandler) Info(c echo.Context) error {
 
 }
 
+//GetData returns the data in JSON format
 func (me *dataHandler) GetData(c echo.Context) error {
 
 	var err error
@@ -71,7 +72,7 @@ func (me *dataHandler) saveAndGetData(c echo.Context, url string) (*store.Catalo
 	me._db.Where("url = ?", url).First(catalog)
 
 	//Delete items & save if the response is not saved
-	if time.Now().Sub(catalog.CreatedAt) >= 24*time.Hour {
+	if catalog.URL == "" || time.Now().Sub(catalog.CreatedAt) >= 24*time.Hour {
 
 		//Delete the catalog
 		if catalog.URL != "" {

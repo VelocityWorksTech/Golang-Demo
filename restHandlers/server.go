@@ -64,10 +64,8 @@ func (me *Server) Start() {
 	me._client.SetLogger(logger)
 	me._e.Logger = logger
 
-	//setup logger middleware
-	me._e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "method=${method}, uri=${uri}, status=${status}\n",
-	}))
+	//setup default logger middleware
+	me._e.Use(middleware.Logger())
 
 	//start the server with graceful shutdown
 	me.Run()
