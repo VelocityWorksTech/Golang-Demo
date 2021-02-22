@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>data.gov</title>
+    <style>
+      table {
+        border: 1px solid gray;
+        width: 100%;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .dataset {
+          margin-bottom: 10px;
+          padding: 10px;
+          border: 1px solid gray;
+          background-color: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2 style="text-align: center">Data.gov information</h2>
+    </header>
+    <hr />
+    <main>
+      <div class="catalog">
+        <div class="catalog_info">
+          {{.ID}} - {{.URL}}
+          <div style="position: relative; float: right;">
+            <a href="{{.ConformsTo}}">Conforms to</a>
+            <a href="{{.DescribedBy}}">Described By</a>
+            <a href="{{.Context}}">Context</a>
+          </div>
+        </div>
+        <hr />
+
+        {{range .Dataset}}
+        <div class="dataset">
+          <h4>{{.Title}}</h4>
+          <p><strong>Description:</strong> {{.Description}}</p>
+          <table>
+            <tr>
+              <th>Modified</th>
+              <th>Access Level</th>
+              <th>Identifier</th>
+              <th>License</th>
+              <th>Keywords</th>
+              <th>Bureau Codes</th>
+              <th>Program Codes</th>
+            </tr>
+            <tr>
+              <td>{{.Modified}}</td>
+              <td>{{.AccessLevel}}</td>
+              <td>{{.Identifier}}</td>
+              <td>{{.License}}</td>
+              <td>{{.Keywords}}</td>
+              <td>{{.BureauCodes}}</td>
+              <td>{{.ProgramCodes}}</td>
+            </tr>
+          </table>
+
+          {{if .Distributions}}
+          <h3><b>Distributions:</b></h3>
+
+          <table>
+            <tr>
+              <th>MediaType</th>
+              <th>ConformsTo</th>
+              <th>Format</th>
+              <th>Access URL</th>
+              <th>Download URL</th>
+            </tr>
+            {{range .Distributions}}
+            <tr>
+              <td>{{.MediaType}}</td>
+              <td>{{.ConformsTo}}</td>
+              <td>{{.Format}}</td>
+              <td>{{.AccessURL}}</td>
+              <td>{{.DownloadURL}}</td>
+            </tr>
+            {{end}}
+          </table>
+
+          {{end}} {{with .Publisher}}
+          <div>
+            <h4><b>Name:</b> {{.Name}}</h4>
+          </div>
+          {{end}} {{with .ContactPoint}}
+          <div>
+            <h4><b>Contact:</b> <a href="{{.HasEmail}}">{{.Fn}}</a></h4>
+          </div>
+          {{end}}
+        </div>
+
+        {{end}}
+      </div>
+    </main>
+  </body>
+</html>

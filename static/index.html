@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Velocity Works - data.gov</title>
+    <style>
+
+      form input {
+        margin-top: 10px;
+        min-width: 40%;
+      }
+
+      form .submit-btn {
+        padding: 10px;
+        background-color: darkslategray;
+        color: white;
+        
+      }
+      main {
+        text-align: center;
+        margin-top: 70px;
+      }
+
+      h2 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header><h2>Welcome to data.gov search</h2></header>
+    <main>
+      <div>
+        This application supports the all the URLS from the below site:
+        <p>
+          <a href="https://labs.data.gov/dashboard/offices/qa"
+            >https://labs.data.gov/dashboard/offices/qa</a
+          >
+        </p>
+      </div>
+
+      <form action="/info" method="post">
+        <input
+        style="padding: 10px;"
+        autofocus
+        class="urldetails-input"
+        placeholder="Enter URL to get details"
+        name="urldetails"
+      />
+      <br/>
+      <input class="submit-btn" type="submit" value="Get Data">
+      </form> 
+    </main>
+  </body>
+</html>

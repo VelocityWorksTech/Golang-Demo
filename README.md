@@ -1,11 +1,74 @@
 <a href="https://www.velocityworks.io/home">Velocity Works Coding Demo</a>
 # Golang-Demo
 
-This Golang application consumes a JSON payload from https://www.data.gov/, populates a database and displays the database contents on a web page.
+This Golang application consumes a JSON payload from https://www.data.gov/ and populates a database to display the database contents on a web page.
 
-Frameworks used:
+It is a simple http server to donwload the JSON from https://labs.data.gov/dashboard/offices/qa . It features Rest endpoint to get the JSON response & save in a database. It is written using Echo Web Framework to make server high performant.
 
-- Echo to build the website: https://github.com/labstack/echo
-- Resty to retrieve data from Data.gov: https://github.com/go-resty/resty
-- Jsonparser to process the data: https://github.com/buger/jsonparser
-- GORM to populate the database: https://github.com/jinzhu/gorm
+
+## Contents
+
+- [Golang-Demo](#golang-demo)
+  - [Usage](#usage)
+  - [Frameworks](#frameworks)
+  - [Performance Metrics](#performance-metrics)
+  - [Limitations](#limitations)
+
+
+## Usage
+
+To install Golang-Demo, you need to install [Go](https://golang.org/)(**version 1.12+ is required**) and set your Go workspace.
+
+1. This project uses go modules
+2. This project has makefile. You should be able to simply install and start:
+
+```sh
+$ git clone https://github.com/anil-appface/golang-demo.git
+$ cd golang-demo
+$ make
+$ ./go-datagov
+```
+
+
+## Frameworks
+
+This project uses the below frameworks:
+
+1. <a href="https://github.com/labstack/echo"><strong>Echo Framework: Simple & high performant server</strong></a>
+2. <a href="https://github.com/go-resty/resty"><strong>Resty: Simple HTTP helper to get information</strong></a>
+3. <a href="https://github.com/buger/jsonparser"><strong>JSON parser: To process the JSON data</strong></a>
+4. <a href="https://github.com/jinzhu/gorm"><strong>Gorm: To populate the database</strong></a>
+
+## Performance Metrics
+
+Benchmarking for this application is not done.
+
+<p align="justify"><i>"As this application uses Echo web framework, the default logs of echo server shows the Method type, uri, and Status code(Which is configurable in main.go). Also it shows the logging of method name, line number and file." <br/>
+
+
+{"time":"2021-02-04T11:48:34.559638168+05:30","id":"","remote_ip":"::1","host":"localhost:8000","method":"GET","uri":"/data?url=https://www.defense.gov/data.json","user_agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36","status":200,"error":"","latency":3516046682,"latency_human":"3.516046682s","bytes_in":0,"bytes_out":294234}
+
+</i></p>
+
+
+## Limitations
+
+1. There is no authentication wrapper around the API's.
+2. There is no field validation in api.
+4. There is no much test cases written in the interest of time.
+5. There is no cron/automation to scrape the defined URL response to store in DB
+
+## Rest API's 
+
+
+1. Web page 
+    http://localhost:8000 
+
+2. To get JSON response from DB: 
+    http://localhost:8000/data?url=https://www.defense.gov/data.json
+
+    url query param is optional. If you do not pass url in the query, then default first record will be returned.
+
+### API structure
+
+<img src="https://github.com/anil-appface/Golang-Demo/blob/master/docs/api-setup.jpg"></img>
